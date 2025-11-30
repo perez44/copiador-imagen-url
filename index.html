@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Creador de URL para Imágenes</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            color: #333;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 40px 20px;
+        }
+        
+        .container {
+            max-width: 800px;
+            width: 100%;
+            background-color: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+            margin-top: 20px;
+        }
+        
+        header {
+            background: linear-gradient(to right, #4a00e0, #8e2de2);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+        
+        .content {
+            padding: 30px;
+        }
+        
+        .upload-area {
+            border: 3px dashed #8e2de2;
+            border-radius: 15px;
+            padding: 40px 20px;
+            text-align: center;
+            margin-bottom: 30px;
+            transition: all 0.3s ease;
+            background-color: #f8f9fa;
+            cursor: pointer;
+        }
+        
+        .upload-area:hover {
+            background-color: #eef2ff;
+            border-color: #4a00e0;
+        }
+        
+        .upload-area.highlight {
+            background-color: #e6f0ff;
+            border-color: #2575fc;
+        }
+        
+        .upload-icon {
+            font-size: 60px;
+            color: #8e2de2;
+            margin-bottom: 15px;
+        }
+        
+        .upload-text {
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+        }
+        
+        .browse-btn {
+            display: inline-block;
+            background: linear-gradient(to right, #4a00e0, #8e2de2);
+            color: white;
+            padding: 12px 25px;
+            border-radius: 50px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: transform 0.3s ease;
+        }
+        
+        .browse-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        #file-input {
+            display: none;
+        }
+        
+        .preview-container {
+            display: none;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .preview-title {
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+            color: #4a00e0;
+        }
+        
+        #image-preview {
+            max-width: 100%;
+            max-height: 300px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .url-container {
+            display: none;
+            margin-top: 30px;
+        }
+        
+        .url-title {
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+            color: #4a00e0;
+        }
+        
+        .url-box {
+            display: flex;
+            margin-bottom: 15px;
+        }
+        
+        #image-url {
+            flex: 1;
+            padding: 12px 15px;
+            border: 2px solid #ddd;
+            border-radius: 8px 0 0 8px;
+            font-size: 1rem;
+            background-color: #f8f9fa;
+        }
+        
+        #copy-btn {
+            background: linear-gradient(to right, #4a00e0, #8e2de2);
+            color: white;
+            border: none;
+            padding: 0 25px;
+            border-radius: 0 8px 8px 0;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        #copy-btn:hover {
+            background: linear-gradient(to right, #3a00c0, #7e1dd2);
+        }
+        
+        .note {
+            background-color: #eef7ff;
+            padding: 15px;
+            border-radius: 10px;
+            border-left: 4px solid #2575fc;
+            font-size: 0.9rem;
+            margin-top: 20px;
+        }
+        
+        .instructions {
+            background-color: #f0f8ff;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 30px;
+        }
+        
+        .instructions h3 {
+            color: #4a00e0;
+            margin-bottom: 15px;
+        }
+        
+        .instructions ol {
+            padding-left: 20px;
+        }
+        
+        .instructions li {
+            margin-bottom: 10px;
+        }
+        
+        footer {
+            margin-top: 30px;
+            text-align: center;
+            color: white;
+            font-size: 0.9rem;
+        }
+        
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .content {
+                padding: 20px;
+            }
+            
+            .url-box {
+                flex-direction: column;
+            }
+            
+            #image-url {
+                border-radius: 8px 8px 0 0;
+                margin-bottom: 5px;
+            }
+            
+            #copy-btn {
+                border-radius: 0 0 8px 8px;
+                padding: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Creador de URL para Imágenes</h1>
+            <p class="subtitle">Sube una imagen y obtén una URL para compartir</p>
+        </header>
+        
+        <div class="content">
+            <div class="upload-area" id="upload-area">
+                <div class="upload-icon">📁</div>
+                <p class="upload-text">Arrastra tu imagen aquí o haz clic para seleccionar</p>
+                <div class="browse-btn">Buscar imagen</div>
+                <input type="file" id="file-input" accept="image/*">
+            </div>
+            
+            <div class="preview-container" id="preview-container">
+                <h3 class="preview-title">Vista previa</h3>
+                <img id="image-preview" src="" alt="Vista previa">
+            </div>
+            
+            <div class="url-container" id="url-container">
+                <h3 class="url-title">URL de tu imagen</h3>
+                <div class="url-box">
+                    <input type="text" id="image-url" readonly>
+                    <button id="copy-btn">Copiar</button>
+                </div>
+                <p class="note">
+                    <strong>Nota:</strong> Esta URL es local y solo funciona en tu navegador actual. 
+                    Para obtener una URL pública permanente, necesitas subir la imagen a un servicio 
+                    en la nube como Google Drive, Imgur o Dropbox.
+                </p>
+            </div>
+            
+            <div class="instructions">
+                <h3>¿Cómo usar esta herramienta?</h3>
+                <ol>
+                    <li>Haz clic en "Buscar imagen" o arrastra una imagen al área indicada</li>
+                    <li>Selecciona una imagen desde tu dispositivo</li>
+                    <li>Verás una vista previa de tu imagen</li>
+                    <li>Haz clic en "Copiar" para copiar la URL generada</li>
+                    <li>Pega la URL donde necesites compartirla</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+    
+    <footer>
+        <p>Herramienta para crear URLs de imágenes &copy; 2023</p>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const fileInput = document.getElementById('file-input');
+            const uploadArea = document.getElementById('upload-area');
+            const previewContainer = document.getElementById('preview-container');
+            const imagePreview = document.getElementById('image-preview');
+            const urlContainer = document.getElementById('url-container');
+            const imageUrl = document.getElementById('image-url');
+            const copyBtn = document.getElementById('copy-btn');
+            const browseBtn = document.querySelector('.browse-btn');
+            
+            // Abrir selector de archivos al hacer clic en el área de carga o botón
+            uploadArea.addEventListener('click', function() {
+                fileInput.click();
+            });
+            
+            browseBtn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                fileInput.click();
+            });
+            
+            // Prevenir el comportamiento por defecto para el arrastre
+            ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+                uploadArea.addEventListener(eventName, preventDefaults, false);
+            });
+            
+            function preventDefaults(e) {
+                e.preventDefault();
+                e.stopPropagation();
+            }
+            
+            // Efectos visuales para el arrastre
+            ['dragenter', 'dragover'].forEach(eventName => {
+                uploadArea.addEventListener(eventName, highlight, false);
+            });
+            
+            ['dragleave', 'drop'].forEach(eventName => {
+                uploadArea.addEventListener(eventName, unhighlight, false);
+            });
+            
+            function highlight() {
+                uploadArea.classList.add('highlight');
+            }
+            
+            function unhighlight() {
+                uploadArea.classList.remove('highlight');
+            }
+            
+            // Manejar la imagen soltada
+            uploadArea.addEventListener('drop', handleDrop, false);
+            
+            function handleDrop(e) {
+                const dt = e.dataTransfer;
+                const files = dt.files;
+                handleFiles(files);
+            }
+            
+            // Manejar la imagen seleccionada
+            fileInput.addEventListener('change', function() {
+                handleFiles(this.files);
+            });
+            
+            function handleFiles(files) {
+                if (files.length > 0) {
+                    const file = files[0];
+                    
+                    // Verificar que sea una imagen
+                    if (!file.type.match('image.*')) {
+                        alert('Por favor, selecciona un archivo de imagen (JPEG, PNG, GIF, etc.)');
+                        return;
+                    }
+                    
+                    // Crear una URL local para la imagen
+                    const imageURL = URL.createObjectURL(file);
+                    
+                    // Mostrar la vista previa
+                    imagePreview.src = imageURL;
+                    previewContainer.style.display = 'block';
+                    
+                    // Mostrar la URL y hacer scroll hacia ella
+                    imageUrl.value = imageURL;
+                    urlContainer.style.display = 'block';
+                    urlContainer.scrollIntoView({ behavior: 'smooth' });
+                }
+            }
+            
+            // Copiar URL al portapapeles
+            copyBtn.addEventListener('click', function() {
+                imageUrl.select();
+                imageUrl.setSelectionRange(0, 99999); // Para dispositivos móviles
+                
+                try {
+                    const successful = document.execCommand('copy');
+                    if (successful) {
+                        // Cambiar temporalmente el texto del botón
+                        const originalText = copyBtn.textContent;
+                        copyBtn.textContent = '¡Copiado!';
+                        copyBtn.style.background = 'linear-gradient(to right, #00b09b, #96c93d)';
+                        
+                        setTimeout(() => {
+                            copyBtn.textContent = originalText;
+                            copyBtn.style.background = 'linear-gradient(to right, #4a00e0, #8e2de2)';
+                        }, 2000);
+                    }
+                } catch (err) {
+                    console.error('Error al copiar: ', err);
+                    alert('No se pudo copiar la URL. Por favor, cópiala manualmente.');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
